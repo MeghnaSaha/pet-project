@@ -62,10 +62,28 @@ public class CatalogActivity extends AppCompatActivity {
 
     private void displayDatabaseInfo() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + PetEntry.TABLE_NAME, null);
+        String[] projection = new String[]{
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                PetEntry.COLUMN_PET_WEIGHT
+        };
+        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection, null, null, null, null, null);
         try {
             TextView displayView = (TextView) findViewById(R.id.text_view_pet);
             displayView.setText("Number of rows in pets database table: " + cursor.getCount());
+
+            int idColumnIndex = cursor.getColumnIndex(PetEntry._ID);
+            int nameColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
+            int breedColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
+            int weightColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT);
+
+            while(cursor.moveToNext()){
+                displayView.append("\n" + cursor.getString(idColumnIndex) + ". " +
+                                    cursor.getString(nameColumnIndex) + " (" +
+                                    cursor.getString(breedColumnIndex) + ") - " +
+                                    cursor.getInt(weightColumnIndex) + " kg");
+            }
         } finally {
             cursor.close();
         }
