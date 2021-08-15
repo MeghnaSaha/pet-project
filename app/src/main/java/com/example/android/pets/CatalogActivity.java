@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.android.pets.data.PetContract.PetEntry;
@@ -68,7 +69,7 @@ public class CatalogActivity extends AppCompatActivity {
                 PetEntry.COLUMN_PET_BREED,
                 PetEntry.COLUMN_PET_WEIGHT
         };
-        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection, null, null, null, null, null);
+        Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI, projection, null, null, null);
         try {
             TextView displayView = (TextView) findViewById(R.id.text_view_pet);
             displayView.setText("Number of rows in pets database table: " + cursor.getCount());
@@ -85,7 +86,8 @@ public class CatalogActivity extends AppCompatActivity {
                                     cursor.getInt(weightColumnIndex) + " kg");
             }
         } finally {
-            cursor.close();
+            if(cursor != null)
+                cursor.close();
         }
     }
 
