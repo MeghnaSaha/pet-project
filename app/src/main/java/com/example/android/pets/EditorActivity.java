@@ -99,7 +99,7 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_NAME, mNameEditText.getText().toString().trim());
         values.put(PetEntry.COLUMN_PET_BREED, mBreedEditText.getText().toString().trim());
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
-        values.put(PetEntry.COLUMN_PET_WEIGHT, Integer.parseInt(mWeightEditText.getText().toString().trim()));
+        values.put(PetEntry.COLUMN_PET_WEIGHT, TextUtils.isEmpty(mWeightEditText.getText().toString()) ? 0 : Integer.parseInt(mWeightEditText.getText().toString().trim()));
         Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
         if (newUri == null) {
             Toast.makeText(this, R.string.pet_insert_failure_message, Toast.LENGTH_SHORT).show();
