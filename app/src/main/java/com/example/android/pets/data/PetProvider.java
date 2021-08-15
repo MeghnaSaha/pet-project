@@ -43,7 +43,7 @@ public class PetProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch(match){
             case PETS:
-                cursor = database.query(PetEntry.TABLE_NAME, projection, null, null, null, null, sortOrder);
+                cursor = database.query(PetEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case PET_ID:
                 selection = PetEntry._ID + "=?";
@@ -70,24 +70,13 @@ public class PetProvider extends ContentProvider {
             case PETS:
                 return insertPet(uri, values);
             default:
-                throw new IllegalArgumentException("Cannot query unknown URI " + uri);
+                throw new IllegalArgumentException("Cannot insert data at unknown URI " + uri);
         }
     }
 
     private Uri insertPet(Uri uri, ContentValues values){
         //Data validations
-        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
-        if (TextUtils.isEmpty(name)) {
-            throw new IllegalArgumentException("Pet requires a name");
-        }
-        Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
-        if (gender == null || !PetEntry.isValidGender(gender)) {
-            throw new IllegalArgumentException("Pet requires valid gender");
-        }
-        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
-        if (weight != null && weight < 0) {
-            throw new IllegalArgumentException("Pet requires valid weight");
-        }
+        validatePetData(values);
 
         //Insert data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
@@ -101,11 +90,59 @@ public class PetProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        switch(match){
+            case PETS:
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            case PET_ID:
+                selection = PetEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for unknown URI " + uri);
+        }
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        int match = sUriMatcher.match(uri);
+        switch(match){
+            case PETS:
+                return updatePet(uri, values, selection, selectionArgs);
+            case PET_ID:
+                selection = PetEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return updatePet(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported at unknown URI " + uri);
+        }
+    }
+
+    private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+        //Data validations
+        if(values.size() == 0){
+            return 0;
+        }
+        validatePetData(values);
+
+        //Update data
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        return database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs);
+    }
+
+    private void validatePetData(ContentValues values){
+        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+        if (TextUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+        Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+        if (gender == null || !PetEntry.isValidGender(gender)) {
+            throw new IllegalArgumentException("Pet requires valid gender");
+        }
+        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+        if (weight != null && weight < 0) {
+            throw new IllegalArgumentException("Pet requires valid weight");
+        }
     }
 }
