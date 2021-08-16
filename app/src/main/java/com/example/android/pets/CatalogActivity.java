@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -49,6 +50,9 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
+        ListView petListView = findViewById(R.id.pet_list);
+        petListView.setEmptyView(findViewById(R.id.empty_view));
+
         displayDatabaseInfo();
     }
 
@@ -66,25 +70,10 @@ public class CatalogActivity extends AppCompatActivity {
                 PetEntry.COLUMN_PET_WEIGHT
         };
         Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI, projection, null, null, null);
-        try {
-            TextView displayView = (TextView) findViewById(R.id.text_view_pet);
-            displayView.setText("Number of rows in pets database table: " + cursor.getCount());
 
-            int idColumnIndex = cursor.getColumnIndex(PetEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
-            int weightColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT);
-
-            while(cursor.moveToNext()){
-                displayView.append("\n" + cursor.getString(idColumnIndex) + ". " +
-                                    cursor.getString(nameColumnIndex) + " (" +
-                                    cursor.getString(breedColumnIndex) + ") - " +
-                                    cursor.getInt(weightColumnIndex) + " kg");
-            }
-        } finally {
-            if(cursor != null)
-                cursor.close();
-        }
+        ListView petListView = findViewById(R.id.pet_list);
+        PetCursorAdapter petCursorAdapter = new PetCursorAdapter(this, cursor);
+        petListView.setAdapter(petCursorAdapter);
     }
 
     private void insertPet() {
