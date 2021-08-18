@@ -16,6 +16,7 @@
 package com.example.android.pets;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -29,9 +30,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 /**
@@ -56,34 +59,28 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
-
         petListView = findViewById(R.id.pet_list);
+
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent editPetIntent = new Intent(CatalogActivity.this, EditorActivity.class);
+                editPetIntent.setData(ContentUris.withAppendedId(PetEntry.CONTENT_URI, id));
+                startActivity(editPetIntent);
+            }
+        });
+
         petListView.setEmptyView(findViewById(R.id.empty_view));
         petCursorAdapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(petCursorAdapter);
 
-        displayDatabaseInfo();
+        getLoaderManager().initLoader(0, null, this);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        displayDatabaseInfo();
-    }
-
-    private void displayDatabaseInfo() {
-        String[] projection = new String[]{
-                PetEntry._ID,
-                PetEntry.COLUMN_PET_NAME,
-                PetEntry.COLUMN_PET_BREED,
-                PetEntry.COLUMN_PET_WEIGHT
-        };
-        Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI, projection, null, null, null);
-
-        ListView petListView = findViewById(R.id.pet_list);
-        PetCursorAdapter petCursorAdapter = new PetCursorAdapter(this, cursor);
-        petListView.setAdapter(petCursorAdapter);
     }
 
     private void insertPet() {
@@ -106,7 +103,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         switch (item.getItemId()) {
             case R.id.action_insert_dummy_data:
                 insertPet();
-                displayDatabaseInfo();
                 return true;
             case R.id.action_delete_all_entries:
                 return true;

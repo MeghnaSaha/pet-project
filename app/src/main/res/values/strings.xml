@@ -20,8 +20,9 @@
     <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_entries">Delete All Pets</string>
 
-    <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
+    <!-- Title for the activity to add/edit a new pet [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_pet">Add a Pet</string>
+    <string name="editor_activity_title_edit_pet">Edit Pet</string>
 
     <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
@@ -61,5 +62,7 @@
 
     <!--Messages-->
     <string name="pet_insert_success_message">Pet saved!</string>
-    <string name="pet_insert_failure_message">Error saving pet data!</string>
+    <string name="pet_insert_failure_message">Error saving pet data</string>
+    <string name="pet_update_success_message">Pet updated!</string>
+    <string name="pet_update_failure_message">Error updating pet data</string>
 </resources>
