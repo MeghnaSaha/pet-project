@@ -65,4 +65,9 @@
     <string name="pet_insert_failure_message">Error saving pet data</string>
     <string name="pet_update_success_message">Pet updated!</string>
     <string name="pet_update_failure_message">Error updating pet data</string>
+
+    <!-- Unsaved changes Dialog -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 </resources>
