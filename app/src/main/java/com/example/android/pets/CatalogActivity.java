@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Displays list of pets that were entered and stored in the app.
@@ -105,6 +106,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 insertPet();
                 return true;
             case R.id.action_delete_all_entries:
+                deleteAllPets();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -129,5 +131,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         petCursorAdapter.swapCursor(null);
+    }
+
+    private void deleteAllPets() {
+        int rowsDeleted = getContentResolver().delete(PetEntry.CONTENT_URI, null, null);
+        if(rowsDeleted == 0){
+            Toast.makeText(this, R.string.delete_pets_failed, Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, R.string.delete_pets_successful, Toast.LENGTH_SHORT).show();
+        }
     }
 }

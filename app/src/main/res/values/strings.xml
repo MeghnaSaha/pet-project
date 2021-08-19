@@ -60,7 +60,7 @@
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
 
-    <!--Messages-->
+    <!--Add/Edit Pet Messages-->
     <string name="pet_insert_success_message">Pet saved!</string>
     <string name="pet_insert_failure_message">Error saving pet data</string>
     <string name="pet_update_success_message">Pet updated!</string>
@@ -70,4 +70,15 @@
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
+
+    <!-- Delete Pet-->
+    <string name="editor_delete_pet_successful">Pet deleted</string>
+    <string name="editor_delete_pet_failed">Error while deleting pet</string>
+    <string name="delete_dialog_msg">Delete this pet?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Delete all Pets-->
+    <string name="delete_pets_successful">All pets deleted!</string>
+    <string name="delete_pets_failed">Error while deleting all pets</string>
 </resources>
